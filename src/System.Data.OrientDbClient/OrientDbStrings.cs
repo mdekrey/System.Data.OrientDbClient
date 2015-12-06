@@ -17,7 +17,7 @@ namespace System.Data.OrientDbClient
 
         public static string ParametersMustBeOrientDbParameter => "Parameters must be of type OrientDbParameter";
 
-        internal static string ErrorFromOrientDb(JToken jToken) => "Error from OrientDb: {jToken}";
+        internal static string ErrorFromOrientDb(JToken jToken) => $"Error from OrientDb: {jToken}";
 
         internal static string InvalidParameterName(string value) => $"Parameter names must begin with '$'; '{value}' does not.";
     }

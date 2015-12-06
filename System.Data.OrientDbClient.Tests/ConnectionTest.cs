@@ -94,5 +94,19 @@ namespace System.Data.OrientDbClient
             Assert.Equal(1, states.Count);
         }
 
+        [Fact]
+        public void ErrorConnectingTest()
+        {
+            // Arrange
+            var connection = new OrientDbConnection("Server=127.0.0.1;Database=Fake;User=root;Password=root;AttemptCreate=true");
+
+            // Act
+            var exception = Assert.Throws<OrientDbException>(() => connection.Open());
+
+            // Assert
+            Assert.NotNull(exception);
+            Assert.DoesNotContain(exception.Message, "jToken");
+        }
+
     }
 }
