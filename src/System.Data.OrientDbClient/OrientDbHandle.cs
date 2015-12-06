@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using Newtonsoft.Json.Linq;
+using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ namespace System.Data.OrientDbClient
         public int Port { get; set; }
         public bool AttemptCreate { get; set; }
 
-        public OrientDbResponse Request(string method, string command, string arguments = null, object body = null)
+        public JToken Request(string method, string command, string arguments = null, object body = null)
         {
             try
             {
@@ -29,7 +30,7 @@ namespace System.Data.OrientDbClient
             }
         }
 
-        public async Task<OrientDbResponse> RequestAsync(string method, string command, string arguments = null, object body = null)
+        public async Task<JToken> RequestAsync(string method, string command, string arguments = null, object body = null)
         {
             try
             {
@@ -41,25 +42,27 @@ namespace System.Data.OrientDbClient
             }
         }
 
-        private OrientDbResponse ParseResponse(HttpWebResponse response)
+        private JToken ParseResponse(HttpWebResponse response)
         {
             using (response)
             {
-                var result = new OrientDbResponse();
-                result.Success = ((int)response.StatusCode) / 100 == 2;
+                var success = ((int)response.StatusCode) / 100 == 2;
                 if (response.ContentLength > 0)
                 {
                     using (var sr = new StreamReader(response.GetResponseStream()))
                     {
                         var completeResult = Newtonsoft.Json.Linq.JObject.Parse(sr.ReadToEnd());
-                        if (!result.Success)
+                        if (!success)
                         {
                             throw new OrientDbException(OrientDbStrings.ErrorFromOrientDb(completeResult["errors"]));
                         }
-                        result.Response = completeResult["result"];
+                        return completeResult["result"];
                     }
                 }
-                return result;
+                else
+                {
+                    throw new OrientDbException(OrientDbStrings.NoContentFromOrientDb);
+                }
             }
         }
 

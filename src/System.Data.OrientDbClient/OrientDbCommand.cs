@@ -240,9 +240,9 @@ namespace System.Data.OrientDbClient
             return ToScalarResult(InternalExecute());
         }
 
-        private DbDataReader ToReaderResult(OrientDbResponse orientDbResponse)
+        private DbDataReader ToReaderResult(Newtonsoft.Json.Linq.JToken orientDbResponse)
         {
-            return new OrientDbDataReader(orientDbResponse.Response as Newtonsoft.Json.Linq.JArray);
+            return new OrientDbDataReader(orientDbResponse as Newtonsoft.Json.Linq.JArray);
         }
 
         public override async Task<object> ExecuteScalarAsync(CancellationToken cancellationToken)
@@ -251,22 +251,21 @@ namespace System.Data.OrientDbClient
             return ToScalarResult(await InternalExecuteAsync());
         }
 
-        private static int ToNonQueryResult(OrientDbResponse result)
+        private static int ToNonQueryResult(Newtonsoft.Json.Linq.JToken result)
         {
-            if (!result.Success)
+            if (result is Newtonsoft.Json.Linq.JValue && (result as Newtonsoft.Json.Linq.JValue).Value == null)
+            {
                 return 0;
-            return (result.Response as Newtonsoft.Json.Linq.JArray)?.Count ?? 1;
+            }
+            return (result as Newtonsoft.Json.Linq.JArray)?.Count ?? 1;
         }
 
-        private object ToScalarResult(OrientDbResponse result)
+        private object ToScalarResult(Newtonsoft.Json.Linq.JToken result)
         {
-            if (!result.Success)
-                return null;
-
-            var firstRow = (result.Response as Newtonsoft.Json.Linq.JArray).FirstOrDefault() as Newtonsoft.Json.Linq.JObject;
+            var firstRow = (result as Newtonsoft.Json.Linq.JArray).FirstOrDefault() as Newtonsoft.Json.Linq.JObject;
             if (firstRow == null)
             {
-                return DBNull.Value;
+                return (result as Newtonsoft.Json.Linq.JValue)?.Value ?? DBNull.Value;
             }
             var property = firstRow.Properties().FirstOrDefault(p => !p.Name.StartsWith("@"))?.Name ?? "@rid";
             return (firstRow[property] as Newtonsoft.Json.Linq.JValue)?.Value ?? firstRow[property];
@@ -279,10 +278,10 @@ namespace System.Data.OrientDbClient
                 throw new InvalidOperationException("Connection must valid and open");
         }
 
-        private OrientDbResponse InternalExecute() =>
+        private Newtonsoft.Json.Linq.JToken InternalExecute() =>
             _connection.OrientDbHandle.Request("POST", "batch", body: RequestBody());
 
-        private Task<OrientDbResponse> InternalExecuteAsync() =>
+        private Task<Newtonsoft.Json.Linq.JToken> InternalExecuteAsync() =>
             _connection.OrientDbHandle.RequestAsync("POST", "batch", body: RequestBody());
 
         private object RequestBody() => new

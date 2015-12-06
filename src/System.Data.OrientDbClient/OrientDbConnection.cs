@@ -92,6 +92,10 @@ namespace System.Data.OrientDbClient
                 {
                     OrientDbHandle.Request("POST", "database", "plocal/graph");
                 }
+                else
+                {
+                    throw;
+                }
             }
 
             NotifyAndUpdateState(ConnectionState.Open);

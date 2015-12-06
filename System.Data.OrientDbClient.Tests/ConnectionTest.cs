@@ -98,7 +98,7 @@ namespace System.Data.OrientDbClient
         public void ErrorConnectingTest()
         {
             // Arrange
-            var connection = new OrientDbConnection("Server=127.0.0.1;Database=Fake;User=root;Password=root;AttemptCreate=true");
+            var connection = new OrientDbConnection("Server=127.0.0.1;Database=Fake;User=root;Password=root;AttemptCreate=false");
 
             // Act
             var exception = Assert.Throws<OrientDbException>(() => connection.Open());
