@@ -299,9 +299,10 @@ namespace System.Data.OrientDbClient
                 }
         };
 
-        // (?<=^([^""']|""[^""]*""|'[^']*')*)
-        // Must be preceded by either no quotes or a complete double-quote string or a complete single-quote string (as many times as we want)
-        internal static readonly Regex ParameterReplace = new Regex(@"(?<=^([^""']|""[^""]*""|'[^']*')*)(?<parameter>\$[a-zA-Z0-9_]+)");
+        // (?<=^([^""']|""[^""]*""|'[^']*')*) = Must be preceded by either no quotes or a complete double-quote string or a complete single-quote string (as many times as we want)
+        // (?<!\\)(\\\\)* = Must be preceded by an even number (including 0) of backslashes and not one more
+        // (?<!\\)(\\\\)*\\ = Must be preceded by an odd number of backslashes and not one more
+        internal static readonly Regex ParameterReplace = new Regex(@"(?<=^([^""']|""([^""]|(?<!\\)(\\\\)*\\"")*(?<!\\)(\\\\)*""|'([^']|(?<!\\)(\\\\)*\\')*(?<!\\)(\\\\)*')*)(?<parameter>\$[a-zA-Z0-9_]+)");
         internal string ActualSql()
         {
             if (Parameters.Count == 0)

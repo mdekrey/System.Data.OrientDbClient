@@ -142,7 +142,7 @@ namespace System.Data.OrientDbClient
         {
             // Arrange
             var cmd = connection.CreateCommand();
-            cmd.CommandText = "SELECT '\\\\', \"\\\"$temp\" as s, out($temp) FROM V WHERE @rid='#9:1'";
+            cmd.CommandText = "SELECT \"$temp\" as s, out($temp) FROM V WHERE @rid='#9:1'";
             cmd.Parameters.Add("$temp", "written_by");
 
             // Act
@@ -159,7 +159,9 @@ namespace System.Data.OrientDbClient
         [InlineData("SELECT $temp, $temp FROM V", "temp", "value", "SELECT 'value', 'value' FROM V")]
         [InlineData("SELECT $temp, $temp FROM V", "temp", "Jones's", "SELECT 'Jones\\'s', 'Jones\\'s' FROM V")]
         [InlineData("SELECT '$temp' as s, out($temp) FROM V WHERE @rid='#9:1'", "temp", "value", "SELECT '$temp' as s, out('value') FROM V WHERE @rid='#9:1'")]
-        [InlineData("SELECT '\\\\', \"\\\"$temp\" as s, out($temp) FROM V WHERE @rid='#9:1'", "temp", "value", "SELECT '\\\\', \"\\\"$temp\" as s, out('value') FROM V WHERE @rid='#9:1'")]
+        [InlineData("SELECT '\\\\\\'$temp', out($temp) FROM V", "temp", "value", "SELECT '\\\\\\'$temp', out('value') FROM V")]
+        [InlineData("SELECT '\"', out($temp), \"'\" FROM V", "temp", "value", "SELECT '\"', out('value'), \"'\" FROM V")]
+        [InlineData("SELECT '\\\\\\'', \"\\\"$temp\" as s, out($temp) FROM V WHERE @rid='#9:1'", "temp", "value", "SELECT '\\\\\\'', \"\\\"$temp\" as s, out('value') FROM V WHERE @rid='#9:1'")]
         public void ActualSqlTest(string sql, string parameterName, object parameterValue, string expected)
         {
             // Arrange
