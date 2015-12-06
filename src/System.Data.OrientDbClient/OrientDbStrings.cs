@@ -4,6 +4,10 @@ namespace System.Data.OrientDbClient
 {
     internal class OrientDbStrings
     {
+        public static string BinaryLiteralsNotSupported => "Binary literals are not supported at this time";
+
+        public static string DbTypeLiteralsNotSupported => "DbType literals are not supported at this time";
+
         public static string GetBytesNotSupported => "GetBytes is not supported";
         public static string GetCharsNotSupported => "GetChars is not supported";
 

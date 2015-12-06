@@ -162,6 +162,8 @@ namespace System.Data.OrientDbClient
         [InlineData("SELECT '\\\\\\'$temp', out($temp) FROM V", "temp", "value", "SELECT '\\\\\\'$temp', out('value') FROM V")]
         [InlineData("SELECT '\"', out($temp), \"'\" FROM V", "temp", "value", "SELECT '\"', out('value'), \"'\" FROM V")]
         [InlineData("SELECT '\\\\\\'', \"\\\"$temp\" as s, out($temp) FROM V WHERE @rid='#9:1'", "temp", "value", "SELECT '\\\\\\'', \"\\\"$temp\" as s, out('value') FROM V WHERE @rid='#9:1'")]
+        [InlineData("SELECT $temp FROM V", "temp", 15, "SELECT 15 FROM V")]
+        [InlineData("SELECT $temp FROM V", "temp", null, "SELECT null FROM V")]
         public void ActualSqlTest(string sql, string parameterName, object parameterValue, string expected)
         {
             // Arrange
