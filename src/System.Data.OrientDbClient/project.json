@@ -1,13 +1,13 @@
 ﻿{
   "version": "1.0.0-*",
-  "description": "System.Data.OrientDbClient Class Library",
-  "authors": [ "Matt" ],
-  "tags": [ "" ],
-  "projectUrl": "",
-  "licenseUrl": "",
+  "description": "ADO.Net driver for OrientDb",
+  "authors": [ "Matthew DeKrey" ],
+  "tags": [ "orientdb", "graph database", "ado.net" ],
+  "projectUrl": "https://github.com/mdekrey/System.Data.OrientDbClient",
+  "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0",
 
   "dependencies": {
-    "Newtonsoft.Json": "7.0.1"
+    "Newtonsoft.Json": "6.0.1"
   },
 
   "frameworks": {
