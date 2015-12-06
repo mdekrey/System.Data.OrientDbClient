@@ -61,7 +61,14 @@ namespace System.Data.OrientDbClient
                 }
                 else
                 {
-                    throw new OrientDbException(OrientDbStrings.NoContentFromOrientDb);
+                    if (success)
+                    {
+                        return new JValue((object)null);
+                    }
+                    else
+                    {
+                        throw new OrientDbException(OrientDbStrings.NoContentFromOrientDb);
+                    }
                 }
             }
         }

@@ -108,5 +108,21 @@ namespace System.Data.OrientDbClient
             Assert.DoesNotContain(exception.Message, "jToken");
         }
 
+
+        [Fact]
+        public async Task CreateAndDeleteTest()
+        {
+            // Arrange
+            var connection = new OrientDbConnection("Server=127.0.0.1;Database=MyTemp;User=root;Password=root;AttemptCreate=True");
+
+            // Act
+            await connection.OpenAsync();
+            await Task.Delay(1000);
+            var result = await connection.OrientDbHandle.RequestAsync("DELETE", "database");
+
+            // Assert
+            Assert.IsType<Newtonsoft.Json.Linq.JValue>(result);
+            Assert.Null((result as Newtonsoft.Json.Linq.JValue).Value);
+        }
     }
 }

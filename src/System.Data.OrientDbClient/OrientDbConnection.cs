@@ -19,7 +19,7 @@ namespace System.Data.OrientDbClient
             ConnectionString = connectionString;
         }
 
-        public bool AttemptCreate { get; private set; }
+        public bool AttemptCreate => OrientDbHandle.AttemptCreate;
 
         public override string ConnectionString
         {
