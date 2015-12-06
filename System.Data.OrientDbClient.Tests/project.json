@@ -1,0 +1,22 @@
+﻿{
+  "version": "1.0.0-*",
+  "description": "System.Data.OrientDbClient.Tests Test Library",
+  "authors": [ "Matt" ],
+  "tags": [ "" ],
+  "projectUrl": "",
+  "licenseUrl": "",
+
+  "dependencies": {
+    "xunit.runner.aspnet": "2.0.0-aspnet-rc1-15897",
+    "System.Data.OrientDbClient": "1.0.0-*"
+  },
+
+  "commands": {
+    "test": "xunit.runner.aspnet -parallel none"
+  },
+
+  "frameworks": {
+    "dnx451": {
+    }
+  }
+}

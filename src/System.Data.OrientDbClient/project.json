@@ -1,0 +1,21 @@
+﻿{
+  "version": "1.0.0-*",
+  "description": "System.Data.OrientDbClient Class Library",
+  "authors": [ "Matt" ],
+  "tags": [ "" ],
+  "projectUrl": "",
+  "licenseUrl": "",
+
+  "dependencies": {
+    "Newtonsoft.Json": "7.0.1"
+  },
+
+  "frameworks": {
+    "dnx451": {
+      "frameworkAssemblies": {
+        "System.Data": "4.0.0.0",
+        "System.Runtime": "4.0.10.0"
+      }
+    }
+  }
+}
