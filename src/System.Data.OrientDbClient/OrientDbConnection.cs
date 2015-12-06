@@ -12,7 +12,7 @@ namespace System.Data.OrientDbClient
     {
         private string connectionString;
         private ConnectionState _connectionState = ConnectionState.Closed;
-        internal readonly OrientDbHandle OrientDbHandle = new OrientDbHandle();
+        public readonly OrientDbHandle OrientDbHandle = new OrientDbHandle();
 
         public OrientDbConnection(string connectionString)
         {

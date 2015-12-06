@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace System.Data.OrientDbClient
 {
-    internal class OrientDbHandle
+    public class OrientDbHandle
     {
         private readonly CookieContainer cookies = new CookieContainer();
 
