@@ -82,11 +82,16 @@ namespace System.Data.OrientDbClient
         public override void Open()
         {
             NotifyAndUpdateState(ConnectionState.Connecting);
-            var response = OrientDbHandle.Request("GET", "connect");
-
-            if (!response.Success && AttemptCreate)
+            try
             {
-                OrientDbHandle.Request("POST", "database", "plocal/graph");
+                OrientDbHandle.Request("GET", "connect");
+            }
+            catch (OrientDbException)
+            {
+                if (AttemptCreate)
+                {
+                    OrientDbHandle.Request("POST", "database", "plocal/graph");
+                }
             }
 
             NotifyAndUpdateState(ConnectionState.Open);
@@ -95,11 +100,16 @@ namespace System.Data.OrientDbClient
         public override async Task OpenAsync(CancellationToken cancellationToken)
         {
             NotifyAndUpdateState(ConnectionState.Connecting);
-            var response = await OrientDbHandle.RequestAsync("GET", "connect");
-
-            if (!response.Success && AttemptCreate)
+            try
             {
-                await OrientDbHandle.RequestAsync("POST", "database", "plocal/graph");
+                await OrientDbHandle.RequestAsync("GET", "connect");
+            }
+            catch (OrientDbException)
+            {
+                if (AttemptCreate)
+                {
+                    await OrientDbHandle.RequestAsync("POST", "database", "plocal/graph");
+                }
             }
 
             NotifyAndUpdateState(ConnectionState.Open);
