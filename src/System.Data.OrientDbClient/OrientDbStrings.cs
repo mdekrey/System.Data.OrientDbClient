@@ -20,6 +20,8 @@ namespace System.Data.OrientDbClient
         internal static string ErrorFromOrientDb(JToken jToken) => $"Error from OrientDb: {jToken}";
         internal static string NoContentFromOrientDb => $"No content returned from OrientDb";
 
+        public static string TransactionsNotSupported => "Transactions across requests are not supported";
+
         internal static string InvalidParameterName(string value) => $"Parameter names must begin with '$'; '{value}' does not.";
     }
 }

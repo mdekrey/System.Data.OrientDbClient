@@ -17,12 +17,17 @@ namespace System.Data.OrientDbClient
             {
                 return "null";
             }
-            return GenerateLiteralValue((dynamic)value);
+            return GenerateLiteral(value);
         }
         
         public virtual string EscapeLiteral(string literal)
             => literal.Replace("\\", "\\\\").Replace("'", "\\'");
 
+
+        public virtual string GenerateLiteral(object value)
+        {
+            return GenerateLiteralValue((dynamic)value);
+        }
 
 
         protected virtual string GenerateLiteralValue(int value)

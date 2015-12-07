@@ -181,35 +181,24 @@ namespace System.Data.OrientDbClient
         }
 
         private Newtonsoft.Json.Linq.JToken InternalExecute() =>
-            _connection.OrientDbHandle.Request("POST", "batch", body: RequestBody());
+            _connection.OrientDbHandle.Request("POST", "command", arguments: "sql", body: RequestBody());
 
         private Task<Newtonsoft.Json.Linq.JToken> InternalExecuteAsync() =>
-            _connection.OrientDbHandle.RequestAsync("POST", "batch", body: RequestBody());
+            _connection.OrientDbHandle.RequestAsync("POST", "command", arguments: "sql", body: RequestBody());
 
-        private object RequestBody() => new
-        {
-            transaction = Transaction,
-            operations = new[]
-                {
-                    new
-                    {
-                        type = "script",
-                        language = "sql",
-                        script = ActualSql()
-                    }
-                }
-        };
+        private object RequestBody() => ActualSql();
 
         // (?<=^([^""']|""[^""]*""|'[^']*')*) = Must be preceded by either no quotes or a complete double-quote string or a complete single-quote string (as many times as we want)
         // (?<!\\)(\\\\)* = Must be preceded by an even number (including 0) of backslashes and not one more
         // (?<!\\)(\\\\)*\\ = Must be preceded by an odd number of backslashes and not one more
-        internal static readonly Regex ParameterReplace = new Regex(@"(?<=^([^""']|""([^""]|(?<!\\)(\\\\)*\\"")*(?<!\\)(\\\\)*""|'([^']|(?<!\\)(\\\\)*\\')*(?<!\\)(\\\\)*')*)(?<parameter>\$[a-zA-Z0-9_]+)");
+        internal static readonly Regex ParameterReplace = new Regex(@"(?<=^([^""']|""([^""]|(?<!\\)(\\\\)*\\"")*(?<!\\)(\\\\)*""|'([^']|(?<!\\)(\\\\)*\\')*(?<!\\)(\\\\)*')*)(?<parameter>\:[a-zA-Z0-9_]+)");
         internal string ActualSql()
         {
             if (Parameters.Count == 0)
             {
                 return CommandText;
             }
+            var values = new OrientDbRawValues();
 
             return ParameterReplace.Replace(CommandText, (Match match) =>
             {
@@ -218,7 +207,7 @@ namespace System.Data.OrientDbClient
                 {
                     return match.Groups[0].Value;
                 }
-                return new OrientDbRawValues().Escape(Parameters[parameterName].Value);
+                return values.Escape(Parameters[parameterName].Value);
             });
         }
     }

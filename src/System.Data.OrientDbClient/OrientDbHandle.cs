@@ -83,8 +83,16 @@ namespace System.Data.OrientDbClient
 
             if (body != null)
             {
-                var bytes = Encoding.UTF8.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(body));
-                request.GetRequestStream().Write(bytes, 0, bytes.Length);
+                if (body is string)
+                {
+                    var bytes = Encoding.UTF8.GetBytes(body as string);
+                    request.GetRequestStream().Write(bytes, 0, bytes.Length);
+                }
+                else
+                {
+                    var bytes = Encoding.UTF8.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(body));
+                    request.GetRequestStream().Write(bytes, 0, bytes.Length);
+                }
             }
             return request;
         }
@@ -94,8 +102,16 @@ namespace System.Data.OrientDbClient
 
             if (body != null)
             {
-                var bytes = Encoding.UTF8.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(body));
-                await (await request.GetRequestStreamAsync()).WriteAsync(bytes, 0, bytes.Length);
+                if (body is string)
+                {
+                    var bytes = Encoding.UTF8.GetBytes(body as string);
+                    await (await request.GetRequestStreamAsync()).WriteAsync(bytes, 0, bytes.Length);
+                }
+                else
+                {
+                    var bytes = Encoding.UTF8.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(body));
+                    await (await request.GetRequestStreamAsync()).WriteAsync(bytes, 0, bytes.Length);
+                }
             }
             return request;
         }

@@ -31,7 +31,7 @@ namespace System.Data.OrientDbClient
                 {
                     throw new ArgumentNullException(nameof(value));
                 }
-                else if (!value.StartsWith("$"))
+                else if (!value.StartsWith(":"))
                 {
                     throw new ArgumentException(OrientDbStrings.InvalidParameterName(value), nameof(value));
                 }

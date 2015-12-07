@@ -9,6 +9,7 @@ namespace System.Data.OrientDbClient
         public OrientDbTransaction(OrientDbConnection orientDbConnection)
         {
             this.orientDbConnection = orientDbConnection;
+            throw new NotSupportedException(OrientDbStrings.TransactionsNotSupported);
         }
 
         public override IsolationLevel IsolationLevel
