@@ -1,9 +1,10 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Data.Common;
+using System.Runtime.Serialization;
 
 namespace System.Data.OrientDbClient
 {
     [Serializable]
-    internal class OrientDbException : Exception
+    public class OrientDbException : DbException
     {
         private object orientDbStrings;
 

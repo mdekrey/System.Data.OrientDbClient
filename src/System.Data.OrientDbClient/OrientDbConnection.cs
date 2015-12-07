@@ -77,6 +77,7 @@ namespace System.Data.OrientDbClient
             {
                 NotifyAndUpdateState(ConnectionState.Closed);
             }
+            OrientDbHandle.ResetConnection();
         }
 
         public override void Open()
@@ -84,13 +85,17 @@ namespace System.Data.OrientDbClient
             NotifyAndUpdateState(ConnectionState.Connecting);
             try
             {
+                OrientDbHandle.ResetConnection();
                 OrientDbHandle.Request("GET", "connect");
             }
             catch (OrientDbException)
             {
                 if (AttemptCreate)
                 {
+                    OrientDbHandle.ResetConnection();
                     OrientDbHandle.Request("POST", "database", "plocal/graph");
+                    Thread.Sleep(1000);
+                    OrientDbHandle.Request("GET", "connect");
                 }
                 else
                 {
@@ -113,6 +118,8 @@ namespace System.Data.OrientDbClient
                 if (AttemptCreate)
                 {
                     await OrientDbHandle.RequestAsync("POST", "database", "plocal/graph");
+                    await Task.Delay(1000);
+                    await OrientDbHandle.RequestAsync("GET", "connect");
                 }
             }
 

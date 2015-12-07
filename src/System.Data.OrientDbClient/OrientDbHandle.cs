@@ -8,7 +8,7 @@ namespace System.Data.OrientDbClient
 {
     public class OrientDbHandle
     {
-        private readonly CookieContainer cookies = new CookieContainer();
+        private CookieContainer cookies = new CookieContainer();
 
         public string Database { get; set; }
         public string Password { get; set; }
@@ -17,6 +17,11 @@ namespace System.Data.OrientDbClient
         public bool UseSsl { get; set; }
         public int Port { get; set; }
         public bool AttemptCreate { get; set; }
+
+        public void ResetConnection()
+        {
+            cookies = new CookieContainer();
+        }
 
         public JToken Request(string method, string command, string arguments = null, object body = null)
         {
@@ -56,7 +61,7 @@ namespace System.Data.OrientDbClient
                         {
                             throw new OrientDbException(OrientDbStrings.ErrorFromOrientDb(completeResult["errors"]));
                         }
-                        return completeResult["result"];
+                        return completeResult;
                     }
                 }
                 else

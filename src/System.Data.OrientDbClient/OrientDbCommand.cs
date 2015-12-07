@@ -131,80 +131,7 @@ namespace System.Data.OrientDbClient
         {
             return new OrientDbParameter();
         }
-
-        //public int ExecuteNonQuery()
-        //{
-        //}
-
-        //public IDataReader ExecuteReader()
-        //{
-        //    /*
-        //     * ExecuteReader should retrieve results from the data source
-        //     * and return a DataReader that allows the user to process 
-        //     * the results.
-        //     */
-        //    // There must be a valid and open connection.
-        //    if (m_connection == null || m_connection.State != ConnectionState.Open)
-        //        throw new InvalidOperationException("Connection must valid and open");
-
-        //    // Execute the command.
-        //    SampleDb.SampleDbResultSet resultset;
-        //    m_connection.SampleDb.Execute(m_sCmdText, out resultset);
-
-        //    return new OrientDbDataReader(resultset);
-        //}
-
-        //public IDataReader ExecuteReader(CommandBehavior behavior)
-        //{
-        //    /*
-        //     * ExecuteReader should retrieve results from the data source
-        //     * and return a DataReader that allows the user to process 
-        //     * the results.
-        //     */
-
-        //    // There must be a valid and open connection.
-        //    if (m_connection == null || m_connection.State != ConnectionState.Open)
-        //        throw new InvalidOperationException("Connection must valid and open");
-
-        //    // Execute the command.
-        //    SampleDb.SampleDbResultSet resultset;
-        //    m_connection.SampleDb.Execute(m_sCmdText, out resultset);
-
-        //    /*
-        //     * The only CommandBehavior option supported by this
-        //     * sample is the automatic closing of the connection
-        //     * when the user is done with the reader.
-        //     */
-        //    if (behavior == CommandBehavior.CloseConnection)
-        //        return new OrientDbDataReader(resultset, m_connection);
-        //    else
-        //        return new OrientDbDataReader(resultset);
-        //}
-
-        //public object ExecuteScalar()
-        //{
-        //    /*
-        //     * ExecuteScalar assumes that the command will return a single
-        //     * row with a single column, or if more rows/columns are returned
-        //     * it will return the first column of the first row.
-        //     */
-
-        //    // There must be a valid and open connection.
-        //    if (m_connection == null || m_connection.State != ConnectionState.Open)
-        //        throw new InvalidOperationException("Connection must valid and open");
-
-        //    // Execute the command.
-        //    SampleDb.SampleDbResultSet resultset;
-        //    m_connection.SampleDb.Execute(m_sCmdText, out resultset);
-
-        //    // Return the first column of the first row.
-        //    // Return a null reference if there is no data.
-        //    if (resultset.data.Length == 0)
-        //        return null;
-
-        //    return resultset.data[0, 0];
-        //}
-
+        
         public override void Prepare()
         {
             // The sample Prepare is a no-op.
@@ -213,62 +140,37 @@ namespace System.Data.OrientDbClient
         protected override DbDataReader ExecuteDbDataReader(CommandBehavior behavior)
         {
             EnforceOpenConnection();
-            return ToReaderResult(InternalExecute());
+            return ResultTransforms.ToReaderResult(InternalExecute());
         }
 
         protected override async Task<DbDataReader> ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
         {
             EnforceOpenConnection();
-            return ToReaderResult(await InternalExecuteAsync());
+            return ResultTransforms.ToReaderResult(await InternalExecuteAsync());
         }
 
         public override int ExecuteNonQuery()
         {
             EnforceOpenConnection();
-            return ToNonQueryResult(InternalExecute());
+            return ResultTransforms.ToNonQueryResult(InternalExecute());
         }
 
         public override async Task<int> ExecuteNonQueryAsync(CancellationToken cancellationToken)
         {
             EnforceOpenConnection();
-            return ToNonQueryResult(await InternalExecuteAsync());
+            return ResultTransforms.ToNonQueryResult(await InternalExecuteAsync());
         }
 
         public override object ExecuteScalar()
         {
             EnforceOpenConnection();
-            return ToScalarResult(InternalExecute());
-        }
-
-        private DbDataReader ToReaderResult(Newtonsoft.Json.Linq.JToken orientDbResponse)
-        {
-            return new OrientDbDataReader(orientDbResponse as Newtonsoft.Json.Linq.JArray);
+            return ResultTransforms.ToScalarResult(InternalExecute());
         }
 
         public override async Task<object> ExecuteScalarAsync(CancellationToken cancellationToken)
         {
             EnforceOpenConnection();
-            return ToScalarResult(await InternalExecuteAsync());
-        }
-
-        private static int ToNonQueryResult(Newtonsoft.Json.Linq.JToken result)
-        {
-            if (result is Newtonsoft.Json.Linq.JValue && (result as Newtonsoft.Json.Linq.JValue).Value == null)
-            {
-                return 0;
-            }
-            return (result as Newtonsoft.Json.Linq.JArray)?.Count ?? 1;
-        }
-
-        private object ToScalarResult(Newtonsoft.Json.Linq.JToken result)
-        {
-            var firstRow = (result as Newtonsoft.Json.Linq.JArray).FirstOrDefault() as Newtonsoft.Json.Linq.JObject;
-            if (firstRow == null)
-            {
-                return (result as Newtonsoft.Json.Linq.JValue)?.Value ?? DBNull.Value;
-            }
-            var property = firstRow.Properties().FirstOrDefault(p => !p.Name.StartsWith("@"))?.Name ?? "@rid";
-            return (firstRow[property] as Newtonsoft.Json.Linq.JValue)?.Value ?? firstRow[property];
+            return ResultTransforms.ToScalarResult(await InternalExecuteAsync());
         }
 
 

@@ -15,7 +15,7 @@ namespace System.Data.OrientDbClient
 
         public ConnectionTest()
         {
-            connection = new OrientDbConnection("Server=127.0.0.1;Database=UserTest;User=root;Password=root;AttemptCreate=true");
+            connection = new OrientDbConnection("Server=localhost.;Database=UserTest;User=root;Password=root;AttemptCreate=true");
         }
 
         public void Dispose()
