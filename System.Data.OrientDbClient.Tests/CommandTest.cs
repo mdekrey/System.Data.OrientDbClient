@@ -154,6 +154,26 @@ namespace System.Data.OrientDbClient
             Assert.IsType<JArray>(reader["out"]);
             Assert.Equal(1, ((JArray)reader["out"]).Count);
         }
-        
+
+        [Fact]
+        public void BatchScalarRidTest()
+        {
+            // Arrange
+            var cmd = connection.CreateBatchCommand();
+            cmd.CommandsText.Add("LET $v1 = CREATE VERTEX V");
+            cmd.CommandsText.Add("LET $v2 = CREATE VERTEX V");
+            cmd.CommandsText.Add("return { 'v1': $v1.@rid, 'v2': $v2 }");
+
+            // Act
+            using (var reader = cmd.ExecuteReader())
+            {
+                // Assert
+                Assert.True(reader.Read());
+                Assert.IsType<string>(reader["v1"]);
+                Assert.IsType<string>(reader["v2"]);
+                Assert.False(reader.Read());
+            }
+        }
+
     }
 }

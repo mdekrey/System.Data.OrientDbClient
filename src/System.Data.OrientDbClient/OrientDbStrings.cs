@@ -22,6 +22,10 @@ namespace System.Data.OrientDbClient
 
         public static string TransactionsNotSupported => "Transactions across requests are not supported";
 
+        public static string BatchCommandUsesCommandsText => $"{nameof(OrientDbBatchCommand)} uses property {nameof(OrientDbBatchCommand.CommandsText)}; it does not support a single command.";
+
+        public static string BatchCommandUsesIsTransaction => $"{nameof(OrientDbBatchCommand)} uses property {nameof(OrientDbBatchCommand.IsTransaction)}; it does not support a transaction object.";
+
         internal static string InvalidParameterName(string value) => $"Parameter names must begin with '$'; '{value}' does not.";
     }
 }

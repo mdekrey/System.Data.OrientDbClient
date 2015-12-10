@@ -136,6 +136,11 @@ namespace System.Data.OrientDbClient
             return new OrientDbCommand() { Connection = this };
         }
 
+        public OrientDbBatchCommand CreateBatchCommand()
+        {
+            return new OrientDbBatchCommand() { Connection = this };
+        }
+
         protected override DbCommand CreateDbCommand()
         {
             return new OrientDbCommand() { Connection = this };
