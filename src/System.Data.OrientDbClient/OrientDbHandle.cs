@@ -27,11 +27,11 @@ namespace System.Data.OrientDbClient
         {
             try
             {
-                return ParseResponse((HttpWebResponse)Append(BuildRequest(method, command, arguments), body).GetResponse());
+                return ParseResponse((HttpWebResponse)Append(BuildRequest(method, command, arguments), body).GetResponse(), body);
             }
             catch (WebException ex) when (ex.Response is HttpWebResponse)
             {
-                return ParseResponse(ex.Response as HttpWebResponse);
+                return ParseResponse(ex.Response as HttpWebResponse, body);
             }
         }
 
@@ -39,15 +39,15 @@ namespace System.Data.OrientDbClient
         {
             try
             {
-                return ParseResponse((HttpWebResponse)await (await AppendAsync(BuildRequest(method, command, arguments), body)).GetResponseAsync());
+                return ParseResponse((HttpWebResponse)await (await AppendAsync(BuildRequest(method, command, arguments), body)).GetResponseAsync(), body);
             }
             catch (WebException ex) when (ex.Response is HttpWebResponse)
             {
-                return ParseResponse(ex.Response as HttpWebResponse);
+                return ParseResponse(ex.Response as HttpWebResponse, body);
             }
         }
 
-        private JToken ParseResponse(HttpWebResponse response)
+        private JToken ParseResponse(HttpWebResponse response, object body)
         {
             using (response)
             {
@@ -59,7 +59,12 @@ namespace System.Data.OrientDbClient
                         var completeResult = Newtonsoft.Json.Linq.JObject.Parse(sr.ReadToEnd());
                         if (!success)
                         {
-                            throw new OrientDbException(OrientDbStrings.ErrorFromOrientDb(completeResult["errors"]));
+                            var exception = new OrientDbException(OrientDbStrings.ErrorFromOrientDb(completeResult["errors"]));
+                            if (body != null)
+                            {
+                                exception.Data.Add("Body", JToken.FromObject(body).ToString());
+                            }
+                            throw exception;
                         }
                         return completeResult;
                     }
@@ -72,7 +77,12 @@ namespace System.Data.OrientDbClient
                     }
                     else
                     {
-                        throw new OrientDbException(OrientDbStrings.NoContentFromOrientDb);
+                        var exception = new OrientDbException(OrientDbStrings.NoContentFromOrientDb);
+                        if (body != null)
+                        {
+                            exception.Data.Add("Body", JToken.FromObject(body).ToString());
+                        }
+                        throw exception;
                     }
                 }
             }
