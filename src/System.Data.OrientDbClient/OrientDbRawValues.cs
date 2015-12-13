@@ -30,6 +30,9 @@ namespace System.Data.OrientDbClient
         }
 
 
+        protected virtual string GenerateLiteralValue(OrientDbRecordId value)
+            => $"#{value.ClusterId}:{value.ClusterPosition}";
+
         protected virtual string GenerateLiteralValue(int value)
             => value.ToString();
 
