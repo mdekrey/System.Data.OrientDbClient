@@ -26,6 +26,8 @@ namespace System.Data.OrientDbClient
 
         public static string BatchCommandUsesIsTransaction => $"{nameof(OrientDbBatchCommand)} uses property {nameof(OrientDbBatchCommand.IsTransaction)}; it does not support a transaction object.";
 
+        public static string DatabaseCouldNotBeCreated => "Database could not be created";
+
         internal static string InvalidParameterName(string value) => $"Parameter names must begin with '$'; '{value}' does not.";
     }
 }

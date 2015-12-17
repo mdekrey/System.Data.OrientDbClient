@@ -13,7 +13,6 @@ namespace System.Data.OrientDbClient
         UpdateRowSource m_updatedRowSource = UpdateRowSource.None;
         OrientDbParameterCollection m_parameters = new OrientDbParameterCollection();
         private int _commandTimeout;
-        private OrientDbTransaction _transaction;
 
         // Implement the default constructor here.
         public OrientDbBatchCommand()

@@ -134,7 +134,9 @@ namespace System.Data.OrientDbClient
             request.CookieContainer = cookies;
             if (User != null)
             {
-                request.Credentials = new NetworkCredential(User, Password);
+                string authInfo = User + ":" + Password;
+                authInfo = Convert.ToBase64String(Encoding.Default.GetBytes(authInfo));
+                request.Headers["Authorization"] = "Basic " + authInfo;
             }
 
             return request;
