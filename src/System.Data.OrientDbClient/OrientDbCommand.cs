@@ -181,12 +181,24 @@ namespace System.Data.OrientDbClient
         }
 
         private Newtonsoft.Json.Linq.JToken InternalExecute() =>
-            _connection.OrientDbHandle.Request("POST", "command", arguments: "sql", body: RequestBody());
+            _connection.OrientDbHandle.Request("POST", "batch", arguments: "sql", body: RequestBody());
 
         private Task<Newtonsoft.Json.Linq.JToken> InternalExecuteAsync() =>
-            _connection.OrientDbHandle.RequestAsync("POST", "command", arguments: "sql", body: RequestBody());
+            _connection.OrientDbHandle.RequestAsync("POST", "batch", arguments: "sql", body: RequestBody());
 
-        private object RequestBody() => ActualSql();
+        private object RequestBody() => new
+        {
+            transaction = false,
+            operations = new[]
+                {
+                    new
+                    {
+                        type = "script",
+                        language = "sql",
+                        script = ActualSql()
+                    }
+                }
+        };
 
         // (?<=^([^""']|""[^""]*""|'[^']*')*) = Must be preceded by either no quotes or a complete double-quote string or a complete single-quote string (as many times as we want)
         // (?<!\\)(\\\\)* = Must be preceded by an even number (including 0) of backslashes and not one more

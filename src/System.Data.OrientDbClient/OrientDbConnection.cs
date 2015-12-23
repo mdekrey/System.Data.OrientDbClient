@@ -44,6 +44,7 @@ namespace System.Data.OrientDbClient
                 OrientDbHandle.Password = connectionParameters["Password"];
                 OrientDbHandle.UseSsl = Convert.ToBoolean(connectionParameters["UseSsl"] ?? "False");
                 OrientDbHandle.AttemptCreate = Convert.ToBoolean(connectionParameters["AttemptCreate"] ?? "False");
+                OrientDbHandle.UseDummyTransaction = Convert.ToBoolean(connectionParameters["UseDummyTransaction"] ?? "False");
             }
         }
 
@@ -217,7 +218,14 @@ namespace System.Data.OrientDbClient
 
         protected override DbTransaction BeginDbTransaction(IsolationLevel isolationLevel)
         {
-            return new OrientDbTransaction(this);
+            if (this.OrientDbHandle.UseDummyTransaction)
+            {
+                return new OrientDbTransaction(this);
+            }
+            else
+            {
+                throw new NotSupportedException(OrientDbStrings.TransactionsNotSupported);
+            }
         }
 
         public new OrientDbCommand CreateCommand()

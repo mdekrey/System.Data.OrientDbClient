@@ -17,6 +17,7 @@ namespace System.Data.OrientDbClient
         public bool UseSsl { get; set; }
         public int Port { get; set; }
         public bool AttemptCreate { get; set; }
+        public bool UseDummyTransaction { get; set; }
 
         public void ResetConnection()
         {

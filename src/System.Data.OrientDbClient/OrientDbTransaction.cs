@@ -9,33 +9,19 @@ namespace System.Data.OrientDbClient
         public OrientDbTransaction(OrientDbConnection orientDbConnection)
         {
             this.orientDbConnection = orientDbConnection;
-            throw new NotSupportedException(OrientDbStrings.TransactionsNotSupported);
         }
 
-        public override IsolationLevel IsolationLevel
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
+        public override IsolationLevel IsolationLevel => IsolationLevel.Chaos;
 
-        protected override DbConnection DbConnection
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
+        protected override DbConnection DbConnection => orientDbConnection;
 
         public override void Commit()
         {
-            throw new NotImplementedException();
         }
 
         public override void Rollback()
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
     }
 }
